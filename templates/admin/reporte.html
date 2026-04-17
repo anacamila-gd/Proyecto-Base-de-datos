@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-header">
+  <h1>Reporte de ventas del día</h1>
+  <div class="admin-nav">
+    <button class="btn primary" onclick="window.print()">🖨️ Imprimir</button>
+    <a class="btn" href="{{ url_for('admin_pedidos') }}">← Volver</a>
+  </div>
+</div>
+
+<div id="reporte-print">
+  <h2 style="text-align:center; margin-bottom:0.5rem;">CAMILA DOMÍNGUEZ JOYERÍA</h2>
+  <p style="text-align:center; color:#888; font-size:0.85rem; margin-bottom:2rem;">
+    Reporte de ventas — {{ ventas[0]['creado_en'][:10] if ventas else "Hoy" }}
+  </p>
+
+  {% if not ventas %}
+    <p style="text-align:center;" class="muted">No hay ventas registradas hoy.</p>
+  {% else %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#ID</th>
+          <th>Cliente</th>
+          <th>Email</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in ventas %}
+        <tr>
+          <td>#{{ v['id'] }}</td>
+          <td>{{ v['cliente_nombre'] }}</td>
+          <td>{{ v['cliente_email'] or "—" }}</td>
+          <td>${{ "%.2f"|format(v['total']) }}</td>
+          <td>{{ v['estado'] }}</td>
+          <td>{{ v['creado_en'][11:16] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div style="max-width:340px; margin-left:auto; margin-top:1.5rem;
+                background:var(--color-blanco); border:1px solid var(--color-borde);
+                border-radius:6px; padding:1.25rem 1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+
+      <div style="display:flex; justify-content:space-between; align-items:center;
+                  padding-bottom:0.75rem; border-bottom:1px solid var(--color-borde);
+                  font-family:'Playfair Display',serif; font-size:1rem;">
+        <span style="color:#888; letter-spacing:1px;">TOTAL DEL DÍA</span>
+        <strong>${{ "%.2f"|format(total_dia) }}</strong>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center;
+                  padding-top:0.75rem;
+                  font-family:'Playfair Display',serif; font-size:1.05rem;">
+        <span style="letter-spacing:1px;">GANANCIA REAL</span>
+        <strong style="color:{% if ganancia_dia > 0 %}#2a7a2a{% else %}#c0392b{% endif %}; font-size:1.2rem;">
+          ${{ "%.2f"|format(ganancia_dia) }}
+        </strong>
+      </div>
+
+      {% if total_dia > 0 %}
+      <div style="margin-top:0.6rem; text-align:right; font-size:0.8rem; color:#888;">
+        Margen: {{ "%.1f"|format((ganancia_dia / total_dia) * 100) }}%
+      </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+@media print {
+  .navbar, .footer, .admin-header .admin-nav, .alerts { display: none !important; }
+  body { background: white; }
+}
+</style>
+{% endblock %}

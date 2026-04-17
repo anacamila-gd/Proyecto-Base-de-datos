@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-header">
+  <h1>Avisos al cliente</h1>
+  <a class="btn" href="{{ url_for('admin_productos') }}">← Volver</a>
+</div>
+
+<div class="form-wrap" style="margin-bottom:2rem;">
+  <h2>Nuevo aviso</h2>
+  <form method="POST" class="admin-form">
+    <label>Título</label>
+    <input class="input" type="text" name="titulo" placeholder="Ej: Envío gratis hoy" required>
+    <label>Mensaje</label>
+    <textarea class="input textarea" name="mensaje" placeholder="Escribe el mensaje para tus clientes..." required></textarea>
+    <button class="btn primary" type="submit">Publicar aviso</button>
+  </form>
+</div>
+
+<h2>Avisos publicados</h2>
+{% if not avisos %}
+  <p class="muted" style="text-align:center;">No hay avisos publicados.</p>
+{% else %}
+  {% for aviso in avisos %}
+  <div class="pedido-card">
+    <div class="pedido-header">
+      <strong>{{ aviso.titulo }}</strong>
+      <span class="muted">{{ aviso.creado_en }}</span>
+      <span class="pill" style="{% if aviso.activo %}background:#c6f5c6{% else %}background:#f5c6c6{% endif %}">
+        {% if aviso.activo %}Activo{% else %}Inactivo{% endif %}
+      </span>
+    </div>
+    <p style="font-size:0.9rem; margin-top:0.5rem;">{{ aviso.mensaje }}</p>
+    <form method="POST" action="{{ url_for('admin_eliminar_aviso', aviso_id=aviso.id) }}"
+          style="margin-top:0.75rem;"
+          onsubmit="return confirm('¿Eliminar este aviso?')">
+      <button class="btn danger" type="submit">Eliminar</button>
+    </form>
+  </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}

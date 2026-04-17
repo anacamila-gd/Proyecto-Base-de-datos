@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title or "Camila Domínguez Joyería" }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="{{ url_for('index') }}">CAMILA DOMÍNGUEZ</a>
+    <nav class="nav-links">
+      {% if session.get('admin') %}
+        <a class="cartlink" href="{{ url_for('admin_productos') }}">⚙️ Admin</a>
+        <a class="cartlink" href="{{ url_for('logout') }}">Cerrar sesión</a>
+      {% elif session.get('usuario') %}
+        <span class="cartlink">Hola, {{ session['usuario']['nombre'] }} 💛</span>
+        <a class="cartlink" href="{{ url_for('carrito') }}">👜 Carrito</a>
+        <a class="cartlink" href="{{ url_for('logout_cliente') }}">Cerrar sesión</a>
+      {% else %}
+        <a class="cartlink" href="{{ url_for('registro') }}">Crear cuenta</a>
+        <a class="cartlink" href="{{ url_for('login_cliente') }}">Iniciar sesión</a>
+        <a class="cartlink" href="{{ url_for('carrito') }}">👜 Carrito</a>
+        <a class="cartlink" href="{{ url_for('login') }}">Admin</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alerts">
+          {% for m in messages %}
+            <div class="alert">{{ m }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 CAMILA DOMÍNGUEZ JOYERÍA — E-COMMERCE UAA
+  </footer>
+</body>
+</html>

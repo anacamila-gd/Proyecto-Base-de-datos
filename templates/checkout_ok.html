@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="text-align:center; margin-top:3rem;">
+  <h1>✅ Pedido confirmado</h1>
+  <p style="margin-top:1rem;">Gracias, <strong>{{ nombre }}</strong>.</p>
+  <p>Tu pedido se registró con ID <strong>#{{ pedido_id }}</strong>.</p>
+  <a class="btn primary" href="{{ url_for('index') }}" style="display:inline-block; margin-top:1.5rem;">
+    Volver al catálogo
+  </a>
+</div>
+{% endblock %}

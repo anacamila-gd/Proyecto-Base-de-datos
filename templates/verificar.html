@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Verificar pedido</h1>
+
+<div class="checkout">
+  <p style="text-align:center; margin-bottom:1.5rem;">
+    Revisa tu pedido antes de confirmar:
+  </p>
+
+  <table class="table">
+    <thead>
+      <tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>
+    </thead>
+    <tbody>
+      {% for it in items %}
+      <tr>
+        <td>{{ it.p["nombre"] }}</td>
+        <td>{{ it.qty }}</td>
+        <td>${{ "%.2f"|format(it.subtotal) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="total">Total a pagar: <strong>${{ "%.2f"|format(total) }}</strong></div>
+
+  <div style="text-align:center; margin-top:0.5rem; font-size:0.9rem; color:#888;">
+    Cliente: <strong>{{ nombre }}</strong>
+  </div>
+
+  <form method="post" action="{{ url_for('checkout') }}" style="margin-top:1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
+    <input type="hidden" name="nombre" value="{{ nombre }}">
+    <input type="hidden" name="email"  value="{{ email }}">
+    <button class="btn primary" type="submit">✅ Confirmar y pagar (simulado)</button>
+    <a class="btn" href="{{ url_for('carrito') }}" style="text-align:center;">← Volver al carrito</a>
+  </form>
+</div>
+{% endblock %}

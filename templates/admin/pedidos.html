@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-header">
+  <h1>Pedidos</h1>
+  <div class="admin-nav">
+    <a class="btn" href="{{ url_for('admin_reporte') }}">🖨️ Reporte del día</a>
+    <a class="btn" href="{{ url_for('admin_productos') }}">← Volver</a>
+  </div>
+</div>
+
+{% if not pedidos %}
+  <p class="muted" style="text-align:center; margin-top:2rem;">Aún no hay pedidos.</p>
+{% else %}
+<form method="POST">
+  {% for entry in pedidos %}
+  <div class="pedido-card">
+    <div class="pedido-header">
+      <strong>#{{ entry['pedido']['id'] }} — {{ entry['pedido']['cliente_nombre'] }}</strong>
+      <span class="muted">{{ entry['pedido']['creado_en'] }}</span>
+      <span class="pill">Total: ${{ "%.2f"|format(entry['pedido']['total']) }}</span>
+
+      <!-- Selector de estado -->
+      <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem;">
+        <select name="estado_{{ entry['pedido']['id'] }}" class="input" style="width:auto; padding:0.3rem 0.6rem;">
+          <option value="pendiente"  {% if entry['pedido']['estado'] == 'pendiente'  %}selected{% endif %}>Pendiente</option>
+          <option value="enviado"    {% if entry['pedido']['estado'] == 'enviado'    %}selected{% endif %}>Enviado</option>
+          <option value="entregado"  {% if entry['pedido']['estado'] == 'entregado'  %}selected{% endif %}>Entregado</option>
+          <option value="cancelado"  {% if entry['pedido']['estado'] == 'cancelado'  %}selected{% endif %}>Cancelado</option>
+        </select>
+      </label>
+    </div>
+    <ul class="pedido-items">
+      {% for item in entry['items'] %}
+        <li>{{ item['nombre'] }} × {{ item['cantidad'] }} — ${{ "%.2f"|format(item['precio_unit']) }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+  <div style="margin-top:1rem;">
+    <button class="btn primary" type="submit">Guardar cambios</button>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

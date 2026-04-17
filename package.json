@@ -1,0 +1,15 @@
+{
+  "name": "camila-dominguez-joyeria",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de ventas CRM - Joyería",
+  "scripts": {
+    "compile:sass": "sass scss/main.scss static/css/styles.css --watch",
+    "build": "gulp build",
+    "dev": "gulp"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.98.0"
+  }
+}
